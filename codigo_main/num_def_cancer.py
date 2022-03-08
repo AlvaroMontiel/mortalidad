@@ -3441,30 +3441,30 @@ def num_muertes_cancer(dataframe, periodo, tabular, region=0, comuna=0, sexo=0, 
 #######################################################################################################################
 #######################################################################################################################
 
-import pandas as pd
-import os
-print("***************")
-path = os.path.abspath("/Users/alvaro/Documents/Data_Science/Software_mortalidad/datasets/DEF_2010_2018.csv")
-print("Cargando Dataframe")
-df = pd.read_csv(path, sep=";", encoding='Latin',
-                  dtype={21: str, 36: str, 37: str, 38: str, 39: str,
-                         40: str, 41: str, 42: str, 43: str, 44: str,
-                         45: str, 46: str, 47: str, 48: str, 49: str,
-                         50: str, 58: str, 60: str, 64: str, 67: str,
-                         69: str, 70: str, 71: str, 73: str, 76: str,
-                         82: str, 86: str, 89: str, 90: str, 91: str,
-                         93: str, 96: str, 97: str, 98: str, 99: str,
-                         100: str})
-print("ya se cargó el dataframe")
-periodo = "2014-2018"
-tabular = 4
-region = 0
-comuna = 0
-sexo = 0
-
-print("la función comenzó a ejecutarse")
-defunciones = num_muertes_cancer(df, periodo, tabular, region, comuna, sexo,  edad_quinquenal=False)
-print(f"Valor obtenido: {defunciones}")
+# import pandas as pd
+# import os
+# print("***************")
+# path = os.path.abspath("/Users/alvaro/Documents/Data_Science/Software_mortalidad/datasets/DEF_2010_2018.csv")
+# print("Cargando Dataframe")
+# df = pd.read_csv(path, sep=";", encoding='Latin',
+#                   dtype={21: str, 36: str, 37: str, 38: str, 39: str,
+#                          40: str, 41: str, 42: str, 43: str, 44: str,
+#                          45: str, 46: str, 47: str, 48: str, 49: str,
+#                          50: str, 58: str, 60: str, 64: str, 67: str,
+#                          69: str, 70: str, 71: str, 73: str, 76: str,
+#                          82: str, 86: str, 89: str, 90: str, 91: str,
+#                          93: str, 96: str, 97: str, 98: str, 99: str,
+#                          100: str})
+# print("ya se cargó el dataframe")
+# periodo = "2014-2018"
+# tabular = 4
+# region = 2
+# comuna = 0
+# sexo = 2
+#
+# print("la función comenzó a ejecutarse")
+# defunciones = num_muertes_cancer(df, periodo, tabular, region, comuna, sexo,  edad_quinquenal=False)
+# print(f"Valor obtenido: {defunciones}")
 #
 # periodo = "2014-2018"
 # tabular = 2
