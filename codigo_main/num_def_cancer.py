@@ -222,7 +222,7 @@ def num_muertes_cancer(dataframe, periodo, tabular, region=0, comuna=0, sexo=0, 
                     total_defunciones = muertes_grupo_sexo
 
     if (tabular == 1 or tabular == 2) and edad_quinquenal == True:
-        from codigo_main_jupyter import buscar_faltantes as fal
+        from codigo_main import buscar_faltantes as fal
         edad = df_agno['EDAD_CANT'].values.tolist()
         edad_tipo = df_agno['EDAD_TIPO'].values.tolist()
         edades = list(zip(edad, edad_tipo))
@@ -1188,88 +1188,194 @@ def num_muertes_cancer(dataframe, periodo, tabular, region=0, comuna=0, sexo=0, 
                 'CODIGO_GRUPO_DIAG1 == "C60-C63" | CODIGO_GRUPO_DIAG1 == "C64-C68"|'
                 'CODIGO_GRUPO_DIAG1 == "C69-C72" | CODIGO_GRUPO_DIAG1 == "C73-C75"|'
                 'CODIGO_GRUPO_DIAG1 == "C76-C80" | CODIGO_GRUPO_DIAG1 == "C81-C96"|'
-                'CODIGO_GRUPO_DIAG1 == "C97"').copy()
+                'CODIGO_GRUPO_DIAG1 == "C97" | CODIGO_GRUPO_DIAG1 == "D00-D09" |'
+                'CODIGO_GRUPO_DIAG1 == "D10-D36" | CODIGO_GRUPO_DIAG1 == "D37-D48"').copy()
 
             for i in df_agno_tabularx['CODIGO_CATEGORIA_DIAG1']:
-                if i == "C00" or i == "C01" or i == "C02" or i == "C03" or i == "C04" or i == "C05" or i == "C06" \
-                        or i == "C07" or i == "C08" or i == "C09" or i == "C10" or i == "C11" or i == "C12" \
-                        or i == "C13" or i == "C14":
-                    tabular_cod.append("C00-C14")
-                    tabular_glosa.append("Tumores malignos del labio de la cavidad bucal y la faringe")
+                if i == "C00":
+                    tabular_cod.append("C00")
+                    tabular_glosa.append("Tumor maligno del Labio")
+                elif i == "C01" or i == "C02":
+                    tabular_cod.append("C01-C02")
+                    tabular_glosa.append("Tumor maligno de la Lengua")
+                elif i == "C03" or i == "C06":
+                    tabular_cod.append("C03-C06")
+                    tabular_glosa.append("Tumor maligno de la Cavidad Oral")
+                elif i == "C07" or i == "C08":
+                    tabular_cod.append("C07-C08")
+                    tabular_glosa.append("Tumor maligno de las Glándulas Salivales")
+                elif i == "C09":
+                    tabular_cod.append("C09")
+                    tabular_glosa.append("Tumor maligno de la Amígdala")
+                elif i == "C10":
+                    tabular_cod.append("C10")
+                    tabular_glosa.append("Tumor maligno de la Orofarínge")
+                elif i == "C11":
+                    tabular_cod.append("C11")
+                    tabular_glosa.append("Tumor maligno de la Nasofaringe")
+                elif i == "C12" or i == "C13":
+                    tabular_cod.append("C12-C13")
+                    tabular_glosa.append("Tumor maligno de la Hipofaringe")
+                elif i == "C14":
+                    tabular_cod.append("C14")
+                    tabular_glosa.append("Tumor maligno de otros sitios y de los mal definidos del Labio, Cavidad Bucal y Faringe")
                 elif i == "C15":
                     tabular_cod.append("C15")
-                    tabular_glosa.append("Tumor malignos del esófago")
+                    tabular_glosa.append("Tumor maligno del Esófago")
                 elif i == "C16":
                     tabular_cod.append("C16")
-                    tabular_glosa.append("Tumor maligno del estómago")
-                elif i == "C18" or i == "C19" or i == "C20" or i == "C21":
-                    tabular_cod.append("C18-C21")
-                    tabular_glosa.append("Tumor maligno del colon, recto y ano")
+                    tabular_glosa.append("Tumor maligno del Estómago")
+                elif i == "C17":
+                    tabular_cod.append("C17")
+                    tabular_glosa.append("Tumor maligno del Intestino Delgado")
+                elif i == "C18":
+                    tabular_cod.append("C18")
+                    tabular_glosa.append("Tumor maligno del Colon")
+                elif i == "C19" or i == "C20":
+                    tabular_cod.append("C19-C20")
+                    tabular_glosa.append("Tumor maligno del Recto")
+                elif i == "C21":
+                    tabular_cod.append("C21")
+                    tabular_glosa.append("Tumor maligno del Ano y del Conducto Anal")
                 elif i == "C22":
                     tabular_cod.append("C22")
-                    tabular_glosa.append("Tumor maligno del hígado y de las vías biliares intrahepáticas")
+                    tabular_glosa.append("Tumor maligno del Hígado y de las Vías Biliares Intrahepáticas")
+                elif i == "C23" or i == "C24":
+                    tabular_cod.append("C23-C24")
+                    tabular_glosa.append("Tumor maligno de la Vesícula Biliar y de las Vías Biliares")
                 elif i == "C25":
                     tabular_cod.append("C25")
                     tabular_glosa.append("Tumor maligno del páncreas")
+                elif i == "C30" or i == "C31":
+                    tabular_cod.append("C30-C31")
+                    tabular_glosa.append("Tumor maligno de las Cavidades Nasales y Senos Paranasales")
                 elif i == "C32":
                     tabular_cod.append("C32")
-                    tabular_glosa.append("Tumor maligno de la laringe")
+                    tabular_glosa.append("Tumor maligno de la Laringe")
                 elif i == "C33" or i == "C34":
                     tabular_cod.append("C33-C34")
-                    tabular_glosa.append("Tumor maligno de la tráquea de los bronquios y del pulmón")
+                    tabular_glosa.append("Tumor maligno de la Tráquea de los Bronquios y del Pulmón")
+                elif i == "C37" or i == "C38":
+                    tabular_cod.append("C37-C38")
+                    tabular_glosa.append("Tumor maligno de otros órganos torácicos")
+                elif i == "C40" or i == "C41":
+                    tabular_cod.append("C40-C41")
+                    tabular_glosa.append("Tumor maligno de los Huesos y de los Cartílagos Articulares")
                 elif i == "C43":
                     tabular_cod.append("C43")
                     tabular_glosa.append("Melanoma maligno de la piel")
+                elif i == "C44":
+                    tabular_cod.append("C44")
+                    tabular_glosa.append("Otros tumores malignos de la piel")
+                elif i == "C45":
+                    tabular_cod.append("C45")
+                    tabular_glosa.append("Mesotelioma")
+                elif i == "C46":
+                    tabular_cod.append("C46")
+                    tabular_glosa.append("Sarcoma de Kaposi")
+                elif i == "C47" or i == "C48" or i == "C49":
+                    tabular_cod.append("C47-C49")
+                    tabular_glosa.append("Tumor maligno de Tejidos Blandos")
                 elif i == "C50":
                     tabular_cod.append("C50")
-                    tabular_glosa.append("Tumor maligno de la mama")
+                    tabular_glosa.append("Tumor maligno de la Mama")
+                elif i == "C51":
+                    tabular_cod.append("C51")
+                    tabular_glosa.append("Tumor maligno de la vulva ")
+                elif i == "C52":
+                    tabular_cod.append("C52")
+                    tabular_glosa.append("Tumor maligno de la vagina")
                 elif i == "C53":
                     tabular_cod.append("C53")
-                    tabular_glosa.append("Tumor maligno del cuello del útero")
-                elif i == "C54" or i == "C55":
-                    tabular_cod.append("C54-C55")
-                    tabular_glosa.append("Tumor maligno de otras partes y las no especificadas del útero")
+                    tabular_glosa.append("Tumor maligno del Cuello del Útero")
+                elif i == "C54":
+                    tabular_cod.append("C54")
+                    tabular_glosa.append("Tumor maligno del Cuerpo del Útero")
+                elif i == "C55":
+                    tabular_cod.append("C55")
+                    tabular_glosa.append("Tumor maligno del ")
                 elif i == "C56":
                     tabular_cod.append("C56")
                     tabular_glosa.append("Tumor maligno del ovario")
+                elif i == "C57":
+                    tabular_cod.append("C57")
+                    tabular_glosa.append("Tumor maligno del ")
+                elif i == "C58":
+                    tabular_cod.append("C58")
+                    tabular_glosa.append("Tumor maligno del ")
+                elif i == "C60":
+                    tabular_cod.append("C60")
+                    tabular_glosa.append("Tumor maligno del ")
                 elif i == "C61":
                     tabular_cod.append("C61")
                     tabular_glosa.append("Tumor maligno de la próstata")
+                elif i == "C62":
+                    tabular_cod.append("C62")
+                    tabular_glosa.append("Tumor maligno del ")
+                elif i == "C63":
+                    tabular_cod.append("C63")
+                    tabular_glosa.append("Tumor maligno del ")
+                elif i == "C64":
+                    tabular_cod.append("C64")
+                    tabular_glosa.append("Tumor maligno del ")
+                elif i == "C65":
+                    tabular_cod.append("C65")
+                    tabular_glosa.append("Tumor maligno del ")
+                elif i == "C66":
+                    tabular_cod.append("C66")
+                    tabular_glosa.append("Tumor maligno del ")
                 elif i == "C67":
                     tabular_cod.append("C67")
                     tabular_glosa.append("Tumor maligno de la vejiga urianria")
+                elif i == "C68":
+                    tabular_cod.append("C68")
+                    tabular_glosa.append("Tumor maligno del ")
+                elif i == "C69":
+                    tabular_cod.append("C69")
+                    tabular_glosa.append("Tumor maligno del ")
                 elif i == "C70" or i == "C71" or i == "C72":
                     tabular_cod.append("C70-C72")
                     tabular_glosa.append(
                         "Tumor maligno de las meninges del encéfalo y de otras partes del sistema nervioso central")
-                elif i == "C82" or i == "C83" or i == "C84" or i == "C85":
-                    tabular_cod.append("C82-C85")
-                    tabular_glosa.append("Linfoma no Hodgkin")
+                elif i == "C73":
+                    tabular_cod.append("C73")
+                    tabular_glosa.append("Tumor maligno del ")
+                elif i == "C74":
+                    tabular_cod.append("C74")
+                    tabular_glosa.append("Tumor maligno del ")
+                elif i == "C75":
+                    tabular_cod.append("C75")
+                    tabular_glosa.append("Tumor maligno del ")
+                elif i == "C81":
+                    tabular_cod.append("C81")
+                    tabular_glosa.append("Tumor maligno del ")
+                elif i == "C82" or i == "C83" or i == "C84" or i == "C85" or i == "C86" or i == "C96":
+                    tabular_cod.append("C82-C86, C96")
+                    tabular_glosa.append("Tumor maligno del ")
+                elif i == "C88":
+                    tabular_cod.append("C88")
+                    tabular_glosa.append("Tumor maligno del ")
                 elif i == "C90":
                     tabular_cod.append("C90")
                     tabular_glosa.append("Mieloma Múltiple y tumores malignos de células plasmáticas")
-                elif i == "C91" or i == "C92" or i == "C93" or i == "C94" or i == "C95":
-                    tabular_cod.append("C91-C95")
-                    tabular_glosa.append("Leucemia")
-                elif \
-                        i == "C17" or i == "C23" or i == "C24" or \
-                                i == "C26" or i == "C30" or i == "C31" or \
-                                i == "C37" or i == "C38" or i == "C39" or \
-                                i == "C40" or i == "C41" or i == "C44" or \
-                                i == "C45" or i == "C46" or i == "C47" or \
-                                i == "C48" or i == "C49" or i == "C51" or \
-                                i == "C52" or i == "C57" or i == "C58" or \
-                                i == "C60" or i == "C62" or i == "C63" or \
-                                i == "C64" or i == "C65" or i == "C66" or \
-                                i == "C68" or i == "C69" or i == "C73" or \
-                                i == "C74" or i == "C75" or i == "C76" or \
-                                i == "C77" or i == "C78" or i == "C79" or \
-                                i == "C80" or i == "C81" or i == "C86" or \
-                                i == "C88" or i == "C96" or i == "C97":
-                    tabular_cod.append("C17, C23-C24, C26-C31, C37-C41, C44-C49, C51-C52, C57-C60, C62-C66, C68-C69, C73-C81, C88, C96-C97")
-                    tabular_glosa.append("Resto de tumores malignos")
-            df_agno_tabularx['tabular'] = tabular_cod
-            df_agno_tabularx['tabular_glosa'] = tabular_glosa
+                elif i == "C91":
+                    tabular_cod.append("C91")
+                    tabular_glosa.append("Tumor maligno del ")
+                elif i == "C92" or i == "C93" or i == "C94":
+                    tabular_cod.append("C92-C94")
+                    tabular_glosa.append("Tumor maligno del ")
+                elif i == "C95":
+                    tabular_cod.append("C95")
+                    tabular_glosa.append("Tumor maligno del ")
+                elif i == "D45":
+                    tabular_cod.append("D45")
+                    tabular_glosa.append("Tumor maligno del ")
+                elif i == "D46":
+                    tabular_cod.append("D46")
+                    tabular_glosa.append("Tumor maligno del ")
+                elif i == "C26" or i == "C39" or i == "C76" or i == "C77" or i == "C78" or i == "C79" or i == "C80":
+                    tabular_cod.append("C26, C39, C76-C80")
+                    tabular_glosa.append("Tumor maligno del ")
 
             if sexo == 0 and region == 0 and comuna == 0:
                 a = df_agno_tabularx.groupby(by=['tabular', 'tabular_glosa'], as_index=False).count()

@@ -30,5 +30,5 @@ class ImportarArchivo:
 if __name__ == "__main__":
     poblacion = ImportarArchivo("xlsx", "/Users/alvaro/Documents/Data_Science/Software_mortalidad/datasets/estimaciones-y-proyecciones-2002-2035-comunas.xlsx")
     defunciones = ImportarArchivo("csv", "/Users/alvaro/Documents/Data_Science/Software_mortalidad/datasets/DEF_2010_2018.csv")
-print(poblacion.dataframe.shape)
-print(defunciones.dataframe.shape)
+    print(poblacion.dataframe.shape)
+    print(defunciones.dataframe.shape)
