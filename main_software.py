@@ -24,7 +24,7 @@ print("Dataframe de población cargado")
 print("********")
 print('Cargando variables')
 tabular = 4
-sexo = 2
+sexo = 0
 region = 2
 comuna = 0
 periodo = "2011-2015"
