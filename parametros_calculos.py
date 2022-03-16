@@ -18,7 +18,7 @@ class ParametrosCalculos(ImportarArchivo):
         self.comuna = comuna
         self.datos = ParametrosCalculos.importar_dataframe(self)
         self.poblacion_filtrada = None
-        self.defunciones_filtradas = ParametrosCalculos.agrupar_edad_defunciones(self)
+        self.defunciones_filtradas = ParametrosCalculos.filtrar_geografia_defunciones(self)
 
     # la función crea un objeto Importar Archivo que contiene los dataframe defunciones y población
     def importar_dataframe(self):
@@ -166,13 +166,17 @@ class ParametrosCalculos(ImportarArchivo):
         return df
 
     def filtrar_geografia_defunciones(self):
+        x = list()
+        y = list()
+        x.append(self.region)
+        y.append(self.comuna)
         df = self.agrupar_edad_defunciones()
         if self.region == None and self.comuna == None:
             df = df
         elif self.region != None and self.comuna == None:
-            df = df[df['REG_RES'].isin(self.region)]
+            df = df[df['REG_RES'].isin(x)]
         elif self.region == None and self.comuna != None:
-            df = df[df['COMUNA'].isin(self.comuna)]
+            df = df[df['COMUNA'].isin(y)]
 
         return df
 
@@ -203,10 +207,10 @@ class ParametrosCalculos(ImportarArchivo):
 
 if __name__ == "__main__":
 
-    for i in range(1,3):
+    for i in range(0,23):
         datos = ParametrosCalculos("/Users/alvaro/Documents/Data_Science/Software_mortalidad/datasets/DEF_2010_2018.csv",
                                    "/Users/alvaro/Documents/Data_Science/Software_mortalidad/datasets/poblacion_corto.xlsx",
-                                   "2014-2018", i, 2, region=2)
+                                   "2014-2018", i, comuna=2101)
 
-        print(datos.defunciones_filtradas[['EDAD_CANT','EDAD_CAT']])
+        print(datos.defunciones_filtradas.shape)
 
