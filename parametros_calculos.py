@@ -8,6 +8,7 @@ class ParametrosCalculos(ImportarArchivo):
     El método importar data set es heredado de la clase ImportarArchivo.py y sirve para crear los objetos que contienen
     los dataframes de poblacion y de defunciones
     '''
+	
     def __init__(self, ruta_defunciones, ruta_poblacion, periodo, enfermedad,
                  edad=0, region=None, comuna=None):
         super().__init__(ruta_defunciones, ruta_poblacion)
@@ -176,13 +177,6 @@ class ParametrosCalculos(ImportarArchivo):
 
         return df
 
-    def agrupar_edad_poblacion(self):
-        if self.edad == 0:
-            pass
-        elif self.edad >= 1:
-            pass
-
-
     def filtrar_poblacion(self):
         pass
 
@@ -199,9 +193,8 @@ class ParametrosCalculos(ImportarArchivo):
 
         # return df
 
-
-
 if __name__ == "__main__":
+
 
     for i in range(1,3):
         datos = ParametrosCalculos("/Users/alvaro/Documents/Data_Science/Software_mortalidad/datasets/DEF_2010_2018.csv",
@@ -210,3 +203,7 @@ if __name__ == "__main__":
 
         print(datos.defunciones_filtradas[['EDAD_CANT','EDAD_CAT']])
 
+    datos = ParametrosCalculos("/Users/alvaro/Documents/Data_Science/Software_mortalidad/datasets/DEF_2010_2018.csv",
+                               "/Users/alvaro/Documents/Data_Science/Software_mortalidad/datasets/poblacion_corto.xlsx",
+                               "2014-2018", "cancer", 1)
+    print(datos.filtrar_defunciones().shape)
