@@ -8,7 +8,6 @@ class ParametrosCalculos(ImportarArchivo):
     El método importar data set es heredado de la clase ImportarArchivo.py y sirve para crear los objetos que contienen
     los dataframes de poblacion y de defunciones
     '''
-	
     def __init__(self, ruta_defunciones, ruta_poblacion, periodo, enfermedad,
                  edad=0, region=None, comuna=None):
         super().__init__(ruta_defunciones, ruta_poblacion)
