@@ -198,6 +198,7 @@ class ParametrosCalculos(ImportarArchivo):
 
 if __name__ == "__main__":
     for i in range(0, 23):
+
         datos = ParametrosCalculos("/Users/alvaro/Documents/Data_Science/Software_mortalidad/datasets/DEF_2010_2018.csv",
                                    "/Users/alvaro/Documents/Data_Science/Software_mortalidad/datasets/poblacion_corto.xlsx",
                                    "2014-2018", i, comuna=2101)
