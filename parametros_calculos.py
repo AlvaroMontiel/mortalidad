@@ -17,8 +17,8 @@ class ParametrosCalculos(ImportarArchivo):
         self.region = region
         self.comuna = comuna
         self.datos = ParametrosCalculos.importar_dataframe(self)
-        self.poblacion_filtrada = None
-        self.defunciones_filtradas = ParametrosCalculos.filtrar_geografia_defunciones(self)
+        self.poblacion_filtrada = ParametrosCalculos.filtrar_poblacion(self)
+        self.defunciones_filtradas = ParametrosCalculos.filtrar_defunciones(self)
 
     # la función crea un objeto Importar Archivo que contiene los dataframe defunciones y población
     def importar_dataframe(self):
@@ -180,26 +180,139 @@ class ParametrosCalculos(ImportarArchivo):
 
         return df
 
-    def filtrar_poblacion(self):
-        pass
-
-    def filtrar_periodo_poblacion(self):
-        pass
-
     def filtrar_defunciones(self):
-        pass
-        # if self.edad == 0:
-        #     pass
-        # elif self.edad >= 1:
-        #     pass
+        df = self.filtrar_geografia_defunciones()
 
-        # return df
+        return df
+
+    def filtrar_geografia_poblaciones(self):
+        if self.region == None and self.comuna == None:
+            df_ = self.datos.poblacion
+        elif self.region != None and self.comuna == None:
+            df_ = self.datos.poblacion[(self.datos.poblacion.Region == self.region)]
+        elif self.region == None and self.comuna != None:
+            df_ = self.datos.poblacion[self.datos.poblacion.Comuna == self.comuna ]
+        return df_
+
+    def agrupar_edad_poblaciones(self):
+        df_ = self.filtrar_geografia_poblaciones()
+        if self.edad == 0:
+            df_ = df_
+        elif self.edad >= 1:
+            edad_categoria = list()
+            lista_edad = df_['Edad'].values.tolist()
+            if self.edad == 1:
+                for edad in lista_edad:
+                    if edad >= 0 and edad <= 4:
+                        edad_categoria.append(1)
+                    elif edad >= 5 and edad <= 9:
+                        edad_categoria.append(2)
+                    elif edad >= 10 and edad <= 14:
+                        edad_categoria.append(3)
+                    elif edad >= 15 and edad <= 19:
+                        edad_categoria.append(4)
+                    elif edad >= 20 and edad <= 24:
+                        edad_categoria.append(5)
+                    elif edad >= 25 and edad <= 29:
+                        edad_categoria.append(6)
+                    elif edad >= 30 and edad <= 34:
+                        edad_categoria.append(7)
+                    elif edad >= 35 and edad <= 39:
+                        edad_categoria.append(8)
+                    elif edad >= 40 and edad <= 44:
+                        edad_categoria.append(9)
+                    elif edad >= 45 and edad <= 49:
+                        edad_categoria.append(10)
+                    elif edad >= 50 and edad <= 54:
+                        edad_categoria.append(11)
+                    elif edad >= 55 and edad <= 59:
+                        edad_categoria.append(12)
+                    elif edad >= 60 and edad <= 64:
+                        edad_categoria.append(13)
+                    elif edad >= 65 and edad <= 69:
+                        edad_categoria.append(14)
+                    elif edad >= 70 and edad <= 74:
+                        edad_categoria.append(15)
+                    elif edad >= 75 and edad <= 79:
+                        edad_categoria.append(16)
+                    elif edad >= 80:
+                        edad_categoria.append(17)
+                df_['EDAD_CAT'] = edad_categoria
+            elif self.edad == 2:
+                # 1: 0-17, 2: 18-59, 3: 60 y mas
+                for edad in lista_edad:
+                    if edad >= 0 and edad <= 17:
+                        edad_categoria.append(1)
+                    elif edad >= 18 and edad <= 59:
+                        edad_categoria.append(2)
+                    elif edad >= 60:
+                        edad_categoria.append(3)
+                df_['EDAD_CAT'] = edad_categoria
+            elif self.edad == 3:
+                pass
+        return df_
+
+    def filtrar_periodo_poblaciones(self):
+        df_ = self.agrupar_edad_poblaciones()
+        periodo_poblacion = self.periodo.split("-")
+        per_inicial = int("".join(periodo_poblacion[0]))
+        per_final = int("".join(periodo_poblacion[1]))
+        tipo_per = (per_final - per_inicial) + 1
+        nom_columna = df_.columns.values.tolist()
+
+        if tipo_per % 2 > 0:
+            a = 0
+            b = 0
+            for i in range(0, tipo_per):
+                a += 1
+                b = b + a
+            ano_poblacion = int((per_inicial + (b / a)) - 1)
+            poblacion = "Poblacion" + " " + str(ano_poblacion)
+            for i in range(8, len(nom_columna)):
+                if nom_columna[i] == poblacion:
+                    pass
+                elif nom_columna[i] != poblacion:
+                    df_ = df_.drop(columns=[nom_columna[i]])
+        elif tipo_per % 2 == 0:
+            # Crea dos años
+            if per_final - per_inicial == 1:  # bienio
+                poblacion_1 = "Poblacion" + " " + str(per_inicial)
+                poblacion_2 = "Poblacion" + " " + str(per_final)
+                for i in range(8, len(nom_columna)):
+                    if nom_columna[i] == poblacion_1 or nom_columna == poblacion_2:
+                        pass
+                    elif nom_columna[i] != poblacion_1 and nom_columna[i] != poblacion_2:
+                        df_ = df_.drop(columns=[nom_columna[i]])
+            elif per_final - per_inicial > 1: # cuatrienio y más
+                a = 0
+                b = 0
+                for i in range(0, tipo_per):
+                    a += 1
+                    b = b + a
+                    poblacion_1 = "Poblacion" + " " + str(int(per_inicial + ((b / a) - 0.5) - 1))
+                    poblacion_2 = "Poblacion" + " " + str(int(per_inicial + ((b / a) + 0.5) - 1))
+
+                for i in range(8, len(nom_columna)):
+                    if nom_columna[i] == poblacion_1 or nom_columna == poblacion_2:
+                        pass
+                    elif nom_columna[i] != poblacion_1 and nom_columna[i] != poblacion_2:
+                        df_ = df_.drop(columns=[nom_columna[i]])
+
+        return df_
+
+
+    def filtrar_poblacion(self):
+        df_ = self.filtrar_periodo_poblaciones()
+        return df_
+
+
 
 
 if __name__ == "__main__":
-    for i in range(0, 23):
-        datos = ParametrosCalculos("/Users/alvaro/Documents/Data_Science/Software_mortalidad/datasets/DEF_2010_2018.csv",
-                                   "/Users/alvaro/Documents/Data_Science/Software_mortalidad/datasets/poblacion_corto.xlsx",
-                                   "2014-2018", i, comuna=2101)
+    datos = ParametrosCalculos("/Users/alvaro/Documents/Data_Science/Software_mortalidad/mortalidad/datasets/DEF_2010_2018.csv",
+                               "/Users/alvaro/Documents/Data_Science/Software_mortalidad/mortalidad/datasets/estimaciones-y-proyecciones-2002-2035-comunas.xlsx",
+                               "2014-2014", 2, region=2, edad = 2)
 
-        print(datos.defunciones_filtradas.shape)
+    print(datos.poblacion_filtrada.columns.values.tolist())
+
+
