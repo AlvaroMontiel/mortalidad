@@ -315,5 +315,4 @@ if __name__ == "__main__":
 
     print(datos.poblacion_filtrada.columns.values.tolist())
 
-    
-    
+
