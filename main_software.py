@@ -3,9 +3,9 @@ from codigo_main import tablas_latex
 import os
 print("********")
 path = os.path.abspath(
-       "/Users/alvaro/Documents/Data_Science/Software_mortalidad/mortalidad/datasets/DEF_1990_2018.csv")
+    "/datasets/DEF_1990_2018.csv")
 path2 = os.path.abspath(
-       "/Users/alvaro/Documents/Data_Science/Software_mortalidad/mortalidad/datasets/estimaciones-y-proyecciones-2002-2035-comunas.xlsx")
+    "/datasets/estimaciones-y-proyecciones-2002-2035-comunas.xlsx")
 print("Cargando el dataset de defunciones...")
 df1 = pd.read_csv(path, sep=";", encoding='Latin',
                   dtype={21: str, 36: str, 37: str, 38: str, 39: str,
