@@ -302,6 +302,7 @@ class ParametrosCalculos(ImportarArchivo):
 
 
     def filtrar_poblacion(self):
+        print("Se está ejecutando el módulo Parámetros Cálculos")
         df_ = self.filtrar_periodo_poblaciones()
         return df_
 

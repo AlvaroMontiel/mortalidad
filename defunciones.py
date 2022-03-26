@@ -13,14 +13,17 @@ class NumeroDefunciones(ParametrosCalculos):
         self.num_defunciones = NumeroDefunciones.numero_defunciones(self)
 
     def dataframe_defunciones(self):
+        print("Creando el objeto ParametrosCalculos")
         datos = ParametrosCalculos(self.ruta_defunciones, self.ruta_poblacion,
                                  self.periodo, self.enfermedad, self.edad,
                                  self.region, self.comuna)
 
         df_ = datos.defunciones_filtradas
+        print("Objeto ParametrosCalculos creado")
         return df_
 
     def numero_defunciones(self):
+        print("Se está ejecutando el método numero_defunciones")
         df = self.dataframe_defunciones()
         # Todas las causas del capítulo
         if self.agrupacion_enfermedad == None:
@@ -30,47 +33,140 @@ class NumeroDefunciones(ParametrosCalculos):
             if self.edad == 0:
                 num_defunciones = []
                 num_defunciones2 = []
-                for i in cod_sexo:
-                    x = [i]
-                    a = []
-                    a.append(df[df['SEXO'].isin(x)].shape[0])
-                    a.append(i)
-                    num_defunciones.append(a)
-                a = 0
+                for sexo in cod_sexo:
+                    parametro_filtro = [sexo]
+                    defunciones_lista = []
+                    defunciones_lista.append(df[df['SEXO'].isin(parametro_filtro)].shape[0])
+                    defunciones_lista.append(sexo)
+                    num_defunciones.append(defunciones_lista)
+                defunciones_ambos_sexos = 0
                 for i in range(1,3):
-                    x = [i]
-                    a += df[df['SEXO'].isin(x)].shape[0]
-                num_defunciones.append([a, 3])
-                for i in num_defunciones:
-                    i.append(glosa_diag1[0])
+                    parametro_filtro = [i]
+                    defunciones_ambos_sexos += df[df['SEXO'].isin(parametro_filtro)].shape[0]
+                num_defunciones.append([defunciones_ambos_sexos, 3])
+                for defunciones in num_defunciones:
+                    defunciones.append(glosa_diag1[0])
                 num_defunciones2.append(num_defunciones)
                 dicc_num_defunciones = dict(zip(cap_diag1, num_defunciones2))
+                print(dicc_num_defunciones)
 
             elif self.edad >= 1:
                 if self.edad == 1:
-                    llave = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
-                    for i  in cod_sexo:
-                        print(f"SEXO = {i}")
-                        x = "SEXO == " + str(i)
-                        df_ = df.query(x).copy()
+                    def_hombres = []
+                    def_mujeres = []
+                    def_sexo_desconido = []
+                    edad_cat_ambos_sexos = []
+                    edades_faltantes_hombres = []
+                    edades_faltantes_mujeres = []
+                    edades_faltantes_desconocido = []
+                    for sexo  in cod_sexo:
+                        print(f"SEXO = {sexo}")
+                        parametro_filtro = "SEXO == " + str(sexo)
+                        df_ = df.query(parametro_filtro).copy()
                         edad_cat = df_['EDAD_CAT'].values.tolist()
                         edades_faltantes = fal.faltante(edad_cat)
 
-                        if len(edades_faltantes) < 1:
-                            df_ = df_.groupby(['EDAD_CAT', 'SEXO']).count()
-                            num_defunciones = df_['DIAG1'].values.tolist()
-                            print(num_defunciones)
-                        else:
-                            df_ = df_.groupby(['EDAD_CAT', 'SEXO']).count()
-                            num_defunciones = df_['DIAG1'].values.tolist()
-                            for edad in edades_faltantes:
-                                llave.remove(edad)
-                            print(num_defunciones)
-                            for i in llave:
-                                pass
-                            # muertes_grupo = dict(zip(llave, valor_1))
-                            # total_defunciones = muertes_grupo
+                        if len(edades_faltantes) == 0:
+                            df_ = df_.groupby(['EDAD_CAT']).count()
+                            if sexo == 1:
+                                def_hombres.append(df_['DIAG1'].values.tolist())
+                                edades_faltantes_hombres.append(edades_faltantes)
+                            elif sexo == 2:
+                                def_mujeres.append(df_['DIAG1'].values.tolist())
+                                edades_faltantes_mujeres.append(edades_faltantes)
+                            elif sexo == 9:
+                                def_sexo_desconido.append(df_['DIAG1'].values.tolist())
+                                edades_faltantes_desconocido.append(edades_faltantes)
+                        elif len(edades_faltantes) >= 1:
+                            df_ = df_.groupby(['EDAD_CAT']).count()
+                            if sexo == 1:
+                                def_hombres.append(df_['DIAG1'].values.tolist())
+                                edades_faltantes_hombres.append(edades_faltantes)
+                            elif sexo == 2:
+                                def_mujeres.append(df_['DIAG1'].values.tolist())
+                                edades_faltantes_mujeres.append(edades_faltantes)
+                            elif sexo == 9:
+                                def_sexo_desconido.append(df_['DIAG1'].values.tolist())
+                                edades_faltantes_desconocido.append(edades_faltantes)
+                    llave = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+                    if len(edades_faltantes_hombres[0]) == 0:
+                        contador = 0
+                        for categoria_edad in llave:
+                            sub_lista = []
+                            sub_lista.append(categoria_edad)
+                            sub_lista.append(def_hombres[contador])
+                            sub_lista.append(1)
+                            sub_lista.append(glosa_diag1)
+                            def_hombres[contador] = sub_lista
+                            contador += 1
+                        print(def_hombres)
+                    elif len(edades_faltantes_hombres[0]) >= 1:
+                        for edad in edades_faltantes_hombres[0]:
+                            llave.remove(edad)
+                        contador = 0
+                        for categoria_edad in llave:
+                            sub_lista = []
+                            sub_lista.append(categoria_edad)
+                            sub_lista.append(def_hombres[contador])
+                            sub_lista.append(1)
+                            sub_lista.append(glosa_diag1)
+                            def_hombres[contador] = sub_lista
+                            contador += 1
+                        print(def_hombres)
+                    llave = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
 
+                    if len(edades_faltantes_mujeres) == 0:
+                        contador = 0
+                        for categoria_edad in llave:
+                            sub_lista = []
+                            sub_lista.append(categoria_edad)
+                            sub_lista.append(def_mujeres[contador])
+                            sub_lista.append(1)
+                            sub_lista.append(glosa_diag1)
+                            def_hombres[contador] = sub_lista
+                            contador += 1
+                        print(def_mujeres)
+                    else:
+                        for edad in edades_faltantes_mujeres:
+                            llave.remove(edad)
+                        contador = 0
+                        for categoria_edad in llave:
+                            sub_lista = []
+                            sub_lista.append(categoria_edad)
+                            sub_lista.append(def_mujeres[contador])
+                            sub_lista.append(1)
+                            sub_lista.append(glosa_diag1)
+                            def_hombres[contador] = sub_lista
+                            contador += 1
+                        print(def_mujeres)
+
+                    llave = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+                    if len(edades_faltantes_desconocido) == 0:
+                        for edad in edades_faltantes_desconocido:
+                            llave.remove(edad)
+                        contador = 0
+                        for categoria_edad in llave:
+                            sub_lista = []
+                            sub_lista.append(categoria_edad)
+                            sub_lista.append(def_sexo_desconido[contador])
+                            sub_lista.append(1)
+                            sub_lista.append(glosa_diag1)
+                            def_hombres[contador] = sub_lista
+                            contador += 1
+                        print(def_sexo_desconido)
+                    else:
+                        for edad in edades_faltantes_desconocido:
+                            llave.remove(edad)
+                        contador = 0
+                        for categoria_edad in llave:
+                            sub_lista = []
+                            sub_lista.append(categoria_edad)
+                            sub_lista.append(def_sexo_desconido[contador])
+                            sub_lista.append(1)
+                            sub_lista.append(glosa_diag1)
+                            def_hombres[contador] = sub_lista
+                            contador += 1
+                        print(def_sexo_desconido)
 
                 # 1: 0-17, 2: 18-59, 3: 60 y mas
                 elif self.edad == 2:
@@ -93,7 +189,7 @@ class NumeroDefunciones(ParametrosCalculos):
         elif self.agrupacion_enfermedad == 3:
             pass
 
-
+        # el RETURN que debe ir: dicc_num_defunciones
         return print("Trabajando para usted")
 
 
@@ -110,7 +206,7 @@ if __name__ == '__main__':
                                     enfermedad=enfermedad, region=region, comuna=comuna, edad=edad)
 
     print(defunciones.num_defunciones)
-    # print("*************")
+    print("*************")
     # import pandas as pd
     # print("*************")
     # df = pd.read_csv(path_defunciones, sep=';', encoding='Latin',
@@ -129,7 +225,6 @@ if __name__ == '__main__':
     # edad = df['EDAD_CANT'].values.tolist()
     # edad_tipo = df['EDAD_TIPO'].values.tolist()
     # edades = list(zip(edad, edad_tipo))
-    # print("edades en un tupla")
     # edad_categoria = list()
     # for tupla in edades:
     #     if tupla[1] == 1:
@@ -172,16 +267,51 @@ if __name__ == '__main__':
     # df['EDAD_CAT'] = edad_categoria
     # print(df[['EDAD_CANT','EDAD_CAT']].head())
     #
+    #
+    #
     # for i in cod_sexo:
-    #     print(i)
+    #     print(f"SEXO: {i}")
     #     x = "SEXO == " + str(i)
     #     df_ = df.query(x).copy()
     #     edad_cat = df_['EDAD_CAT'].values.tolist()
     #     edades_faltantes = fal.faltante(edad_cat)
+    #     llave = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    #     if len(edades_faltantes) == 0:
+    #         df_ = df_.groupby(['EDAD_CAT']).count()
+    #         num_def = df_['DIAG1'].values.tolist()
+    #         contador = 0
+    #         defunciones = []
+    #         for categoria_edad in llave:
+    #             sub_lista = []
+    #             sub_lista.append(categoria_edad)
+    #             sub_lista.append(num_def[contador])
+    #             sub_lista.append(i)
+    #             sub_lista.append("Acá va la glosa enfermedad")
+    #             defunciones.append(sub_lista)
+    #             contador += 1
     #
-    #     if len(edades_faltantes) < 1:
-    #         num_defunciones = df.groupby(['EDAD_CAT', 'SEXO']).count().values.tolist()
-    #         print(f"Numero de defunciones: {num_defunciones}")
-    #     else:
-    #         pass
+    #         print(defunciones)
     #
+    #         #falta uno o mas indices
+    #     elif len(edades_faltantes) >= 1:
+    #         df_ = df_.groupby(['EDAD_CAT']).count()
+    #         num_def = df_['DIAG1'].values.tolist()
+    #
+    #
+    #
+    #         for edad in edades_faltantes:
+    #             llave.remove(edad)
+    #
+    #
+    #         contador = 0
+    #         defunciones = []
+    #         for categoria_edad in llave:
+    #             sub_lista = []
+    #             sub_lista.append(categoria_edad)
+    #             sub_lista.append(num_def[contador])
+    #             sub_lista.append(i)
+    #             sub_lista.append("Acá va la glosa enfermedad")
+    #             defunciones.append(sub_lista)
+    #             contador += 1
+    #
+    #         print(defunciones)
