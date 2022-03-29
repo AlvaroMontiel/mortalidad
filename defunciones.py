@@ -89,6 +89,9 @@ class NumeroDefunciones(ParametrosCalculos):
                                 def_sexo_desconido.append(df_['DIAG1'].values.tolist())
                                 edades_faltantes_desconocido.append(edades_faltantes)
                     llave = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+                    print(f"edades faltantes largo = {len(edades_faltantes_hombres)}, edades faltantes hombres {edades_faltantes_hombres}")
+                    print(len(edades_faltantes_mujeres))
+                    print(len(edades_faltantes_desconocido))
                     if len(edades_faltantes_hombres[0]) == 0:
                         contador = 0
                         for categoria_edad in llave:
